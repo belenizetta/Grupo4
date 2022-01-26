@@ -76,6 +76,42 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     }
 });
 
+
+//@desc     Update user profile
+//@route    PUT /api/users/profile
+//@access   Private
+export const updateUserProfile = asyncHandler(async (req, res) => {
+    // Usar findById
+    // Asignar los valores que vienen de la req  o del usuario encontrado
+    // ej: user.name = req.body.name || user.name
+    // Si vienen el password en el req entonces asignarlo al user.password
+    // Guardar el usuario actualizado con .save()
+    // Enviar un res.json({ }) que contenga: _id, name, email, isAdmin, token 
+    // En caso de error devolver status 404  y arrojar  el error: "User not found"
+    const { _id, name, email, password } = req.user;    
+
+    const user = await User.findById({_id});
+     
+    if (user){
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin || user.isAdmin;
+        user.password = req.body.password;
+        const updateUserProfile = await user.save();
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id),
+        });
+    } else {
+        res.status(400);
+        throw new Error('User not found');
+    }
+});
+
 // @desc Get all users 
 // @route PUT /api/users
 // @access Private/Admin
