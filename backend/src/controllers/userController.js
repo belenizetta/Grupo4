@@ -61,7 +61,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 
 export const getUserProfile = asyncHandler(async (req, res) => {
-    const { _id } = req.body;
+    const { _id  } = req.user;
     const user = await User.findById({ _id });
     if(user){
         res.json({
@@ -75,5 +75,45 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         throw new Error ('User Not Found');
     }
 });
+
+// @desc Get all users 
+// @route PUT /api/users
+// @access Private/Admin
+
+export const getUsers = asyncHandler(async (req, res) => {
+    const {name,email,password } = req.body;
+    const userUp = await User.find({ });
+        res.json({
+            _id: userUp._id,
+            name: userUp.name,
+            email: userUp.email,
+            isAdmin: userUp.isAdmin,
+        });
+})
+
+// @desc Get user by ID
+// @route GET /api/users/:id
+// @access Private/Admin
+
+
+export const getUserById = asyncHandler(async (req, res) => {    
+    const user = await User.findById(req.params.id).select('-password');
+    if(!user){
+        res.status(404);
+        throw new Error ('No encontrado');
+               
+    }else{
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        });
+        
+    }
+
+})
+
+
 
 
