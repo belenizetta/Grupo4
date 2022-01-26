@@ -27,3 +27,10 @@ export const protect = asycnHandler(async (req, res, next) => {
     }
 });
 
+export const admin = (req,res,next)=>{
+    if (!req.user || !req.user.isAdmin) {
+      res.status(401).json({ error: 'Not authorized as Admin' });
+      return;
+     }
+     next();
+  ;}
