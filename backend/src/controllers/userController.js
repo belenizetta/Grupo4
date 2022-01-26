@@ -81,13 +81,13 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 // @access Private/Admin
 
 export const getUsers = asyncHandler(async (req, res) => {
-    const {name,email,password } = req.body;
-    const userUp = await User.find({ });
+    const user = await User.find({ });
+    console.log(user);
         res.json({
-            _id: userUp._id,
-            name: userUp.name,
-            email: userUp.email,
-            isAdmin: userUp.isAdmin,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
         });
 })
 
@@ -100,7 +100,7 @@ export const getUserById = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id).select('-password');
     if(!user){
         res.status(404);
-        throw new Error ('No encontrado');
+        throw new Error ('User not Found');
                
     }else{
         res.json({
